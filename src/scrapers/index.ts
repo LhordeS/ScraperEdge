@@ -1,7 +1,7 @@
 import { scrapeMUFG } from "./mufg.js";
 import { scrapeRakuten } from "./rakuten.js";
+import { Scraper } from "../types/scraper.js";
 
-export const scrapers = [
-  scrapeMUFG,
-  scrapeRakuten
-]
+const scrapers: Scraper[] = [scrapeMUFG, scrapeRakuten];
+
+export default scrapers

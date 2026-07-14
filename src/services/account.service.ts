@@ -1,11 +1,9 @@
 import { Account } from "../types/account.js";
-import { scrapeMUFG } from "../scrapers/mufg.js";
-import { scrapeRakuten } from "../scrapers/rakuten.js";
+import { scrapers } from "../scrapers/index.js"
 
 export async function getAccounts(): Promise<Account[]> {
-  const [mufgAccounts, rakutenAccounts] = await Promise.all([
-    scrapeMUFG(),
-    scrapeRakuten(),
-  ])
-  return [...mufgAccounts, ...rakutenAccounts]
+  const results = await Promise.all(
+    scrapers.map(scraper => scraper())
+  )
+  return results.flat()
 }

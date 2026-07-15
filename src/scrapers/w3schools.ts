@@ -10,21 +10,33 @@ export async function scrapeW3Schools(): Promise<Account[]> {
 
   await page.goto("https://www.w3schools.com/html/html_tables.asp");
 
-  const company = await page
-    .locator("#customers tbody tr")
-    .nth(1)
-    .locator("td")
-    .nth(2)
-    .textContent();
+  const rows = await page.locator("#customers tbody tr").all()
+
+  const accounts: Account[] = [];
+
+  for (const row of rows) {
+    const cells = await row.locator("td").all()
+
+
+    if (cells.length < 3) {
+      continue;
+    }
+      const company = await cells[0].textContent();
+      const contract = await cells[1].textContent();
+      const country = await cells[2].textContent();
+
+    const account: Account = {
+      id: company ?? "",
+      bank: company ?? "",
+      balance: 0,
+      currency: 'USD'
+    }
+
+    accounts.push(account);
+
+  }
 
   await browser.close()
 
-  return [
-    {
-      id: crypto.randomUUID(),
-      bank: "W3Schools",
-      balance: 1000,
-      currency: company ?? "Unknown",
-    }
-  ]
+  return accounts;
 }

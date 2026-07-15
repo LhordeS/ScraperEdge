@@ -14,6 +14,7 @@ router.get("/health", (request, response) => {
 });
 
 router.get("/accounts", async (request, response) => {
+  console.log("Account route hit");
   const accounts = await getAccounts();
 
   response.json(accounts);

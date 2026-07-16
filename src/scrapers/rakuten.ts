@@ -9,5 +9,5 @@ export async function scrapeRakuten(): Promise<Account[]> {
   //     currency: "JPY"
   //   },
   // ];
-  throw new Error("Rakuten scraper failed")
+  throw new Error("Invalid endpoint")
 }

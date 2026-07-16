@@ -8,8 +8,14 @@ Current scrapers include placeholder banking integrations alongside a Playwright
 
 ## Demo
 
-### API Response
-![API Response](assets/15.07.2026_21.58.21_REC.png)
+### API Response (all scarpers succeeding)
+![API Response](assets/serverResponse_allGreen.png)
+
+### API Response (some scrapers fail)
+![API Response](assets/serverRespons_someFail.png)
+
+### Returned JSON
+![API Response](assets/returnedJSON.png)
 
 ## Features
 

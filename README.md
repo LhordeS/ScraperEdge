@@ -4,7 +4,7 @@ ScraperEdge is a TypeScript-based scraping framework that demonstrates how to bu
 
 Each scraper returns normalized data regardless of its source, allowing the application to aggregate results from multiple websites through a single endpoint. The project emphasizes type safety, modular architecture, asynchronous programming, and browser automation with Playwright.
 
-Current implementations include placeholder banking scrapers alongside a Playwright-powered scraper that extracts live tabular data from W3Schools.
+The project currently includes placeholder banking scrapers alongside a Playwright-powered scraper that extracts live tabular data from W3Schools.
 
 ## Demo
 

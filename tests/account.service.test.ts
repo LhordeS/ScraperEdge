@@ -1,8 +1,20 @@
-import { describe, expect, it } from "vitest";
+import { afterAll, describe, expect, it } from "vitest";
 import { getAccounts } from "../src/services/account.service.js";
+import { beforeEach, afterEach, vi } from "vitest";
+
+const consoleErrorSpy = vi.spyOn(console, "error");
+
+beforeEach(() => {
+  consoleErrorSpy.mockClear();
+  consoleErrorSpy.mockImplementation(() => {});
+});
+
+afterAll(() => {
+  consoleErrorSpy.mockRestore();
+});
 
 describe("getAccounts", () => {
-  it("returns acoounts from successful scrapers", async () => {
+  it("returns accounts from successful scrapers", async () => {
     const fakeScrapers = [
       {
         name: "Test Bank",
@@ -71,8 +83,8 @@ describe("getAccounts", () => {
         },
       },
     ];
-    const accounts = await getAccounts(fakeScrapers)
+    const accounts = await getAccounts(fakeScrapers);
 
-    expect(accounts).toEqual([])
+    expect(accounts).toEqual([]);
   });
 });

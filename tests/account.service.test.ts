@@ -28,4 +28,51 @@ describe("getAccounts", () => {
       },
     ]);
   });
+
+  it("returns accounts even if on scraper fails", async () => {
+    const fakeScrapers = [
+      {
+        name: "Working Bank",
+        scrape: async () => [
+          {
+            id: "1",
+            bank: "Working Bank",
+            balance: 1000,
+            currency: "JPY",
+          },
+        ],
+      },
+      {
+        name: "Broken Bank",
+        scrape: async () => {
+          throw new Error("Connection failed");
+        },
+      },
+    ];
+
+    const accounts = await getAccounts(fakeScrapers);
+
+    expect(accounts).toEqual([
+      {
+        id: "1",
+        bank: "Working Bank",
+        balance: 1000,
+        currency: "JPY",
+      },
+    ]);
+  });
+
+  it("returns an empty array if all scrapers fail", async () => {
+    const fakeScrapers = [
+      {
+        name: "Failed Bank",
+        scrape: async () => {
+          throw new Error("Connection failed");
+        },
+      },
+    ];
+    const accounts = await getAccounts(fakeScrapers)
+
+    expect(accounts).toEqual([])
+  });
 });

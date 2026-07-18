@@ -87,7 +87,7 @@ describe("getAccounts", () => {
     expect(accounts).toEqual([]);
   });
 
-  it("returns an array of successful accounts", async () => {
+  it("flattens accounts returned by multiple successful scrapers", async () => {
     const fakeScrapers = [
       {
         name: "Array of Banks",

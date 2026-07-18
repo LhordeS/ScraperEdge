@@ -1,4 +1,4 @@
-#ScraperEdge
+# ScraperEdge
 
 ScraperEdge is a TypeScript-based scraping framework that demonstrates how to build, organize, and orchestrate multiple web scrapers behind a clean API.
 

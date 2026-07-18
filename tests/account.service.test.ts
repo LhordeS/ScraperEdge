@@ -1,6 +1,5 @@
-import { afterAll, describe, expect, it } from "vitest";
+import { beforeEach, afterAll, describe, expect, it, vi } from "vitest";
 import { getAccounts } from "../src/services/account.service.js";
-import { beforeEach, afterEach, vi } from "vitest";
 
 const consoleErrorSpy = vi.spyOn(console, "error");
 
@@ -86,5 +85,48 @@ describe("getAccounts", () => {
     const accounts = await getAccounts(fakeScrapers);
 
     expect(accounts).toEqual([]);
+  });
+
+  it("returns an array of successful accounts", async () => {
+    const fakeScrapers = [
+      {
+        name: "Array of Banks",
+        scrape: async () => [
+          {
+            id: "1",
+            bank: "Array Bank 1",
+            balance: 1000,
+            currency: "JPY",
+          },
+        ],
+      },
+      {
+        name: "Banks Array",
+        scrape: async () => [
+          {
+            id: "2",
+            bank: "Array Bank 2",
+            balance: 50000,
+            currency: "JPY",
+          },
+        ],
+      },
+    ];
+    const accounts = await getAccounts(fakeScrapers);
+
+    expect(accounts).toEqual([
+      {
+        id: "1",
+        bank: "Array Bank 1",
+        balance: 1000,
+        currency: "JPY",
+      },
+      {
+        id: "2",
+        bank: "Array Bank 2",
+        balance: 50000,
+        currency: "JPY",
+      },
+    ]);
   });
 });

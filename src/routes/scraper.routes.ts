@@ -1,7 +1,11 @@
 import { Router } from "express";
 import { getAccounts } from "../services/account.service.js";
+import { getCalendarEvents } from "../services/calendar.services.js";
 
-export function createScraperRouter(accountsService = getAccounts) {
+export function createScraperRouter(
+  accountsService = getAccounts,
+  eventsService = getCalendarEvents,
+) {
   const router = Router();
 
   // Check if frontend and backend are connecting
@@ -23,6 +27,19 @@ export function createScraperRouter(accountsService = getAccounts) {
 
       response.status(500).json({
         error: "Failed to retrieve accounts",
+      });
+    }
+  });
+
+  router.get("/calendar", async (request, response) => {
+    try {
+      const events = await eventsService();
+      response.json(events);
+    } catch (error) {
+      console.error(error);
+
+      response.status(500).json({
+        error: "Failed to retrieve events",
       });
     }
   });

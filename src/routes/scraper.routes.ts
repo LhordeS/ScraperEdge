@@ -34,7 +34,11 @@ export function createScraperRouter(
   router.get("/calendar", async (request, response) => {
     try {
       const events = await eventsService();
-      response.json(events);
+      const importance = request.query.importance as string | undefined
+      const filteredEvents = importance
+        ? events.filter((event) => event.importance === importance)
+        : events
+      response.json(filteredEvents);
     } catch (error) {
       console.error(error);
 

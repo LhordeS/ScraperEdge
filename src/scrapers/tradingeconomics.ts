@@ -25,11 +25,24 @@ export async function scrapeTradingEconomics() {
     const eventActual = (await cells[5].textContent())?.trim() ?? null;
     const eventPrevious = (await cells[6].textContent())?.trim() ?? null;
     const eventForecast = (await cells[7].textContent())?.trim() ?? null;
+    let eventImportance: EconomicEvent["importance"];
+
+    const span = cells[0].locator("span");
+    const className = await span.getAttribute("class");
+
+    if (className?.includes("calendar-date-1")) {
+      eventImportance = "Low"
+    } else if (className?.includes("calendar-date-2")) {
+      eventImportance = "Medium"
+    } else if (className?.includes("calendar-date-3")) {
+      eventImportance = "High"
+    }
 
     const calendarEvent: EconomicEvent = {
       time: eventTime ?? "",
       country: eventCountry ?? "",
       event: eventEvent ?? "",
+      importance: eventImportance,
       actual: eventActual,
       previous: eventPrevious,
       forecast: eventForecast,
@@ -38,8 +51,10 @@ export async function scrapeTradingEconomics() {
     events.push(calendarEvent);
   }
 
-  console.log(`Fetching Complete. Total ${events.length} economic events retrieved`)
+  console.log(
+    `Fetching Complete. Total ${events.length} economic events retrieved`,
+  );
 
   await browser.close();
-  return events
+  return events;
 }

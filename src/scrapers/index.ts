@@ -2,6 +2,7 @@ import { scrapeMUFG } from "./mufg.js";
 import { scrapeRakuten } from "./rakuten.js";
 import { scrapeW3Schools } from "./w3schools.js";
 import { Scraper }  from "../types/scraper.js";
+import { scrapeTradingEconomics } from "./tradingeconomics.js";
 
 const scrapers = [
   {
@@ -16,6 +17,10 @@ const scrapers = [
     name: "W3Schools",
     scrape: scrapeW3Schools,
   },
+  // {
+  //   name: "TradingEconomics",
+  //   scrape: scrapeTradingEconomics,
+  // }
 ];
 
 export default scrapers;

@@ -1,5 +1,38 @@
 import { chromium } from "playwright";
 import { EconomicEvent } from "../types/economic-event.js";
+import { RawCalendarRow } from "../types/raw-calendar-row.js";
+
+export function parseRow(rawRow: RawCalendarRow): EconomicEvent {
+  const eventTime = rawRow.time;
+  const eventCountry = rawRow.country;
+  const eventEvent = rawRow.event;
+  const eventActual = rawRow.actual ?? null;
+  const eventPrevious = rawRow.previous ?? null;
+  const eventForecast = rawRow.forecast ?? null;
+  let eventImportance: EconomicEvent["importance"];
+
+  const importanceClass = rawRow.importanceClass;
+
+  if (importanceClass?.includes("calendar-date-1")) {
+    eventImportance = "Low";
+  } else if (importanceClass?.includes("calendar-date-2")) {
+    eventImportance = "Medium";
+  } else if (importanceClass?.includes("calendar-date-3")) {
+    eventImportance = "High";
+  }
+
+  const calendarEvent: EconomicEvent = {
+    time: eventTime ?? "",
+    country: eventCountry ?? "",
+    event: eventEvent ?? "",
+    importance: eventImportance,
+    actual: eventActual,
+    previous: eventPrevious,
+    forecast: eventForecast,
+  };
+
+  return calendarEvent;
+}
 
 export async function scrapeTradingEconomics() {
   const browser = await chromium.launch({
@@ -14,41 +47,22 @@ export async function scrapeTradingEconomics() {
 
   const events = [];
 
-  console.log("Fetching eceonomic calendar events...");
+  console.log("Fetching economic calendar events...");
 
   for (const row of rows) {
     const cells = await row.locator("td").all();
 
-    const eventTime = (await cells[0].textContent())?.trim();
-    const eventCountry = (await cells[1].textContent())?.trim();
-    const eventEvent = (await cells[4].textContent())?.trim();
-    const eventActual = (await cells[5].textContent())?.trim() ?? null;
-    const eventPrevious = (await cells[6].textContent())?.trim() ?? null;
-    const eventForecast = (await cells[7].textContent())?.trim() ?? null;
-    let eventImportance: EconomicEvent["importance"];
-
-    const span = cells[0].locator("span");
-    const className = await span.getAttribute("class");
-
-    if (className?.includes("calendar-date-1")) {
-      eventImportance = "Low"
-    } else if (className?.includes("calendar-date-2")) {
-      eventImportance = "Medium"
-    } else if (className?.includes("calendar-date-3")) {
-      eventImportance = "High"
+    const rawRow: RawCalendarRow = {
+      time: (await cells[0].textContent())?.trim(),
+      country: (await cells[1].textContent())?.trim(),
+      event: (await cells[4].textContent())?.trim(),
+      actual: (await cells[5].textContent())?.trim(),
+      previous: (await cells[6].textContent())?.trim(),
+      forecast: (await cells[7].textContent())?.trim(),
+      importanceClass: await cells[0].locator("span").getAttribute("class"),
     }
 
-    const calendarEvent: EconomicEvent = {
-      time: eventTime ?? "",
-      country: eventCountry ?? "",
-      event: eventEvent ?? "",
-      importance: eventImportance,
-      actual: eventActual,
-      previous: eventPrevious,
-      forecast: eventForecast,
-    };
-
-    events.push(calendarEvent);
+    events.push(await parseRow(rawRow));
   }
 
   console.log(

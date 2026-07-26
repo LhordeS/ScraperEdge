@@ -62,7 +62,7 @@ export async function scrapeTradingEconomics() {
       importanceClass: await cells[0].locator("span").getAttribute("class"),
     }
 
-    events.push(await parseRow(rawRow));
+    events.push(parseRow(rawRow));
   }
 
   console.log(

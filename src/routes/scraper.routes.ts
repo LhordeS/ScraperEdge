@@ -1,15 +1,17 @@
 import { Router } from "express";
 import { getAccounts } from "../services/account.service.js";
 import { getCalendarEvents } from "../services/calendar.services.js";
+import { getBooks } from "../services/books.service.js"
 
 export function createScraperRouter(
   accountsService = getAccounts,
   eventsService = getCalendarEvents,
+  booksService = getBooks,
 ) {
   const router = Router();
 
   // Check if frontend and backend are connecting
-  // (Other similar APIs can be written to chack other aspects of the app/server)
+  // (Other similar APIs can be written to check other aspects of the app/server)
   // Will also be used to check the health of servers such as AWS and Load Balancer
   router.get("/health", (request, response) => {
     response.json({
@@ -47,6 +49,18 @@ export function createScraperRouter(
       });
     }
   });
+
+  router.get("/books", async (request, response) => {
+    try {
+      const books = await booksService();
+      response.json(books)
+    } catch (error) {
+      console.log(error);
+      response.status(500).json({
+        error: "Failed to retrieve books"
+      })
+    }
+  })
 
   return router;
 }

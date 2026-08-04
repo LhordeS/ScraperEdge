@@ -14,6 +14,6 @@ export type Book = {
   upc: string;
   product_type: string;
   availability: string;
-  rating: "star";
+  rating: string;
   description: string;
 }
